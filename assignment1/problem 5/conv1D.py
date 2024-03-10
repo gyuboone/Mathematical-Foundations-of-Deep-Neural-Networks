@@ -26,7 +26,8 @@ class TransposedConvolution1d :
 
         flip_filt = self.__filt[::-1]
 
-        return np.asarray([np.sum(flip_filt[np.maximum(0,r-1-i):min(n-i,r)]*vector[np.maximum(0,i+1-r):min(i+1,n-r+1)]) for i in range(n)]) # IMPLEMENT THIS
+        return np.asarray([np.sum(flip_filt[np.maximum(0,r-1-i):min(n-i,r)]
+                                  *vector[np.maximum(0,i+1-r):min(i+1,n-r+1)]) for i in range(n)]) # IMPLEMENT THIS
 
 def huber_loss(x) :
     return np.sum( (1/2)*(x**2)*(np.abs(x)<=1) + (np.sign(x)*x-1/2)*(np.abs(x)>1) )
