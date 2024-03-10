@@ -12,4 +12,17 @@ def fprime(x):
 
 x = np.linspace(-5,20,100)
 plt.plot(x,f(x), 'k')
+
+## initial point
+x = np.random.uniform(-5,20)
+# x = -1      # specify if you want
+print('initial point :', f'{x:.4f}')
+
+## iteration
+max_iter = 400
+alpha = 0.01          # or 0.3 and 4
+for i in range(max_iter):
+    plt.scatter(x, f(x), alpha=0.4, c='b')
+    x += -alpha*fprime(x)
+
 plt.show()
