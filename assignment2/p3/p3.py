@@ -79,6 +79,5 @@ box2 = {'boxstyle': 'round',
 plt.text(-3.8,3.5, 'black line: initial weight', bbox=box1)
 plt.text(-3.8,3, f'green line: {max_iter} iter later', bbox=box2)
 
-plt.legend()
 plt.savefig('p3_visualization.png')
 plt.show()
