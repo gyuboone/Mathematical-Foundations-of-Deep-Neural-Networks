@@ -26,15 +26,33 @@ Y = f_true(X)
 def f_th(theta, x) :
     return np.sum(theta[2*p : 3*p] * sigmoid(theta[0 : p] * np.reshape(x,(-1,1)) + theta[p : 2*p]), axis=1)
 
-def diff_f_th(theta, x) :
-    pass
+def diff_f_th(theta, x, index) :
+    a = theta[0:p]
+    b = theta[p:2*p]
+    u = theta[2*p:3*p]
+    
+    # (f(X)-Y)
+    chain = (f_th(theta,x)-Y[index])
+
+    # Differential respectively
+    du = sigmoid(a*x+b) * chain
+    da = u*sigmoid_prime(a*x+b)*x * chain
+    db = u*sigmoid_prime(a*x+b) * chain
+
+    return np.concatenate((da,db,du))
+    
 
 xx = np.linspace(-2,2,1024)
 plt.plot(X,f_true(X),'rx',label='Data points')
 plt.plot(xx,f_true(xx),'r',label='True Fn')
 
 for k in range(K) :
-    ...
+    # choose random index
+    index = np.random.randint(0,N-1)
+
+    # SGD
+    theta -= alpha*diff_f_th(theta,X[index],index)
+    
     if (k+1)%2000 == 0 :
         plt.plot(xx,f_th(theta, xx),label=f'Learned Fn after {k+1} iterations')
 
