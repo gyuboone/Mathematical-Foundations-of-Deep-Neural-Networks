@@ -47,7 +47,7 @@ loss = []
 ## training
 for i in range(max_iter):
     # choose random 1 data
-    index = np.random.randint(0,N-1)
+    index = np.random.randint(0,N)
 
     # just temporary instance
     val = y[index]*X_kernel[index]@Theta
