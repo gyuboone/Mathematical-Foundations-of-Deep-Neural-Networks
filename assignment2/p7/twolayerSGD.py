@@ -48,7 +48,7 @@ plt.plot(xx,f_true(xx),'r',label='True Fn')
 
 for k in range(K) :
     # choose random index
-    index = np.random.randint(0,N-1)
+    index = np.random.randint(0,N)
 
     # SGD
     theta -= alpha*diff_f_th(theta,X[index],index)

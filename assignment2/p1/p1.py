@@ -17,7 +17,7 @@ lr = 0.001
 loss = []
 
 for i in range(max_iter):
-    index = np.random.randint(0,N-1)
+    index = np.random.randint(0,N)
     val = np.exp(-Y[index]*(X[index]@Theta))
     gradient = -(1/(1+val))*val*Y[index]*X[index]
     loss.append(calculate_loss(X,Y,Theta))
