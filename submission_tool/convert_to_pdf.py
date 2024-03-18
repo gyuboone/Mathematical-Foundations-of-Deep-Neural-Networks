@@ -13,6 +13,6 @@ def convert_to_pdf(input_file, output_file):
     pdf.output(output_file)
 
 if __name__ == "__main__":
-    input_file = "../assignment1/problem 5/"+"conv1D.py"  # 변환할 Python 파일
-    output_file = "../assignment1/problem 5/"+"conv1D_multi.pdf"  # 생성될 PDF 파일
+    input_file = "../assignment2/p7/"+"twolayerSGD.py"  # 변환할 Python 파일
+    output_file = "../assignment2/p7/"+"twolayerSGD.pdf"  # 생성될 PDF 파일
     convert_to_pdf(input_file, output_file)
