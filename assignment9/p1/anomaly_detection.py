@@ -128,17 +128,24 @@ Step 5: Calculate standard deviation by using validation set
 '''
 validation_loader = torch.utils.data.DataLoader(dataset=validation_dataset, batch_size=batch_size)
 
-val_loss = []
+val_score = []
 
 for images, _ in validation_loader:
-    images.to(device)
+    images = images.to(device)
     z = enc(images)
     reconstructed_images = dec(z)
-    val_loss.append(loss_function(images, reconstructed_images))
+    diff = (images - reconstructed_images) ** 2
+    diff = diff.reshape(batch_size, -1)
+    val_score += torch.sum(diff, axis=1)
+    
 
-mean = torch.mean(val_loss)
-std = torch.std(val_loss)
+val_score_np = []
 
+for i in val_score:
+    val_score_np.append(i.to('cpu').detach().numpy())
+
+mean = np.mean(val_score_np)
+std = np.std(val_score_np)
 threshold = mean + 3 * std
 print("threshold: ", threshold)
 
@@ -150,12 +157,16 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch
 
 mnist_anomalies = 0
 
+mnist_val_score = []
+
 for images, _ in test_loader:
-    images.to(device)
+    images = images.to(device)
     z = enc(images)
     reconstructed_images = dec(z)
-    if loss_function(images, reconstructed_images) > threshold : mnist_anomalies+=1
-    
+    diff = (images - reconstructed_images) ** 2
+    diff = diff.reshape(batch_size, -1)
+    mnist_anomalies+=sum((diff.sum(dim=1)>threshold).int())
+
 
 '''
 Step 7: Anomaly detection (kmnist)
@@ -165,9 +176,12 @@ anomaly_loader = torch.utils.data.DataLoader(dataset=anomaly_dataset, batch_size
 kmnist_anomalies = 0
 
 for images, _ in anomaly_loader:
-    images.to(device)
+    images = images.to(device)
     z = enc(images)
     reconstructed_images = dec(z)
-    if loss_function(images, reconstructed_images) > threshold : kmnist_anomalies
+    diff = (images - reconstructed_images) ** 2
+    diff = diff.reshape(batch_size, -1)
+    kmnist_anomalies+=sum((diff.sum(dim=1)>threshold).int())
 
-print(mnist_anomalies/len(test_dataset)*100 , kmnist_anomalies/len(anomaly_dataset) * 100)
+print('type I error rate:',int(mnist_anomalies)/len(test_dataset)*100)
+print('type II error rate:',int(kmnist_anomalies)/len(anomaly_dataset) * 100)
