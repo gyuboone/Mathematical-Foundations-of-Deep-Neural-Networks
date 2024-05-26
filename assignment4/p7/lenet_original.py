@@ -135,6 +135,7 @@ train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=100
 import time
 start = time.time()
 for epoch in range(10) :
+    model.train()
     print("{}th epoch starting.".format(epoch))
     for images, labels in train_loader :
         images, labels = images.to(device), labels.to(device)
@@ -154,6 +155,8 @@ Step 5
 test_loss, correct, total = 0, 0, 0
 
 test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=100, shuffle=False)
+
+model.eval()
 
 for images, labels in test_loader :
     images, labels = images.to(device), labels.to(device)
