@@ -3,3 +3,5 @@ submission_tool/
 venv/
 
 assignment7/cifar_10data/
+
+*.pt
