@@ -138,7 +138,7 @@ test_loader = torch.utils.data.DataLoader(testset, batch_size=1, shuffle=False)
 pass_count = 6
 itr = iter(test_loader)
 for _ in range(pass_count+1):
-    image,_ = itr.next()
+    image,_ = next(itr)
     
 plt.figure(figsize = (4,4))
 plt.title('Original Image')
@@ -161,15 +161,29 @@ plt.savefig('plt2.png')
 
 
 lr = 1e-3
-...
+X = image.clone().requires_grad_(True)
+Y = X.data
+
+optimizer = torch.optim.SGD([X], lr=lr)
 
 for i in range(300):
-    ...
+
+    X = Y.view(1,-1).clone().requires_grad_(True)
+
+    optimizer.zero_grad()
+    loss = -model(X)
+    loss.backward()
+    optimizer.step()
+
+    with torch.no_grad():
+        X -= X.grad * lr
+        X.grad.zero_()
+        Y[mask.logical_not()] = torch.clamp(X, 0,1).data.view(1,1,28,28)[mask.logical_not()]
     
     
 # Plot reconstruction
 plt.figure(figsize = (4,4))
 plt.title('Reconstruction')
-plt.imshow(make_grid(recon.squeeze().detach()).permute(1,2,0))
+plt.imshow(make_grid(Y.squeeze().detach()).permute(1,2,0))
 # plt.show()
 plt.savefig('plt3.png')
