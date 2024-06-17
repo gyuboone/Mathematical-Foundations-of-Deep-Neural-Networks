@@ -19,7 +19,13 @@ d_theta_val = []
 
 for _ in range(epoch):
     for __ in range(N):
-        ...
+        i = np.random.randint(0,30)    # SGD
+
+        d_phi_i = Y[i]/(1+np.exp(Y[i]*(X[i,:]-phi)@theta))*theta - lamda*phi
+        d_theta_i = -Y[i]*(X[i,:]-phi) / (1+np.exp(Y[i]*(X[i,:]-phi)@theta))
+        
+        phi += beta * d_phi_i
+        theta -= alpha * d_theta_i
 
     L_i = np.average(np.log(1 + np.exp(-Y * ((X - phi.reshape(1,-1)) @ theta)))) - lamda/2 * np.linalg.norm(phi, axis=0, ord=2) **2
     d_phi = np.average(Y / (1 + np.exp(Y * ((X-phi.reshape(1,-1)) @ theta)))) * theta - lamda * phi
@@ -45,4 +51,5 @@ plt.plot(np.linalg.norm(d_theta_val, axis=1, ord=2))
 plt.subplot(3, 1, 3)
 plt.title("||D_phi L||")
 plt.plot(np.linalg.norm(d_phi_val, axis=1, ord=2))
+plt.savefig('plot.png')
 plt.show()
